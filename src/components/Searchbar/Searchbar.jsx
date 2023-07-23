@@ -13,8 +13,7 @@ export const Searchbar = ({hendleInput}) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!value) {
-      hendleInput('random')
-      return Notiflix.Notify.failure( `Here 'random' imgs`);
+      Notiflix.Notify.failure( `Empty search`);
     }
     hendleInput(value)
     setValue('')

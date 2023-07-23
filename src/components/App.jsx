@@ -6,7 +6,7 @@ import {Button}  from './Button/Button'
 import css from './App.module.css'
 import { getImg } from 'services/api';
 import Notiflix from 'notiflix';
-import { useEffect, useState } from "react";
+import {useRef, useEffect, useState } from "react";
 
 
 
@@ -20,42 +20,44 @@ export const App = () => {
   const [modalShow, setModalShow] = useState({})
   const [loadMore, setLoadMore] = useState(false)
   const [gallery, setGallery] = useState([])
+  const prevSearchTextRef = useRef("");
+  
+  useEffect(() => {
+    if (!searchText) {
+      setGallery([]);
+      setLoadMore(false);
+      return;
+    }
 
+    if (prevSearchTextRef.current !== searchText) {
+      setPage(1); 
+      setGallery([]); 
+    }
+    prevSearchTextRef.current = searchText;
 
-const fetchData = async () => {
+    const fetchData = async () => {
       setIsLoading(true)
 
       const resp = await getImg(searchText, page).then(resp => resp)
 
-      setGallery(resp.hits)
-
-      if (resp.totalHits === 0) {
+      setGallery((prevGallery) => [...prevGallery, ...resp.hits]);
+      if (resp.totalHits > page * 12) {
+        setLoadMore(true);
+        setIsLoading(false)
+      }
+      else if (resp.totalHits === 0) {
         setIsLoading(false)
         return Notiflix.Notify.failure( `No imgs found`);
       } else {
         setIsLoading(false)
-        setLoadMore(resp.totalHits > page * 12);
-        return Notiflix.Notify.failure(`Found ${resp.total} imgs`);
 
-
+        setLoadMore(false);
+        return Notiflix.Notify.failure(`Found ${resp.total} imgs`)
       }
     }
 
-
-  useEffect(() => {
-    if (!searchText) return
-    setPage(1)
     fetchData()
-    // console.log('выполнился 1 useEffect');
-  }, [searchText])
-
-
-  useEffect(() => {
-    if (!searchText) return
-    fetchData()
-    //  console.log('выполнился 2 useEffect');  
-   },[page])
-
+  }, [searchText, page])
 
   const hendleInput = async (searchText) => {
     setSearchText(searchText)
