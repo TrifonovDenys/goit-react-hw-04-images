@@ -1,6 +1,7 @@
 import css from "./Searchbar.module.css"
 import {useState } from "react"
 import Notiflix from 'notiflix';
+import PropTypes from 'prop-types'
 export const Searchbar = ({hendleInput}) => {
 
   const [value, setValue] = useState('') 
@@ -37,4 +38,8 @@ export const Searchbar = ({hendleInput}) => {
           </header>
       </>
     )
-  }
+}
+  
+Searchbar.propTypes = {
+  hendleInput: PropTypes.func.isRequired,
+}

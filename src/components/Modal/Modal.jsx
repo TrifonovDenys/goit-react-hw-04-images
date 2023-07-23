@@ -1,6 +1,6 @@
 import css from './Modal.module.css'
 import { useEffect } from "react"
-
+import PropTypes from 'prop-types'
 export const Modal = ({closeModal, img}) => {
 
   useEffect(() => {
@@ -20,4 +20,9 @@ export const Modal = ({closeModal, img}) => {
       </div>
     </div>
   )
+}
+
+Modal.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  img: PropTypes.objectOf(PropTypes.string).isRequired,
 }
