@@ -1,27 +1,29 @@
-import { Component } from "react"
 import css from "./Searchbar.module.css"
+import {useState } from "react"
+import Notiflix from 'notiflix';
+export const Searchbar = ({hendleInput}) => {
 
-export class Searchbar extends Component  {
+  const [value, setValue] = useState('') 
 
-  state = {
-    value: ''
+
+  const handleChange = ({target: {value}}) => {
+    setValue(value)
   }
 
-  handleChange = ({target: {value}}) => {
-    this.setState({value})
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    this.props.hendleInput(this.state.value)
-    this.setState({value: ''})
+    if (!value) {
+      hendleInput('random')
+      return Notiflix.Notify.failure( `Here 'random' imgs`);
+    }
+    hendleInput(value)
+    setValue('')
   }
   
-  render() {
     return (
       <>
         <header className={css.Searchbar}>
-          <form className={css.SearchForm} onSubmit={this.handleSubmit} >
+          <form className={css.SearchForm} onSubmit={handleSubmit} >
             <button type="submit" className={css.SearchFormbutton}>
               <span className={css.SearchForm_button_label}>Search</span>
             </button>
@@ -31,10 +33,9 @@ export class Searchbar extends Component  {
               autoComplete="off"
               autoFocus
               placeholder="Search images and photos"
-              onChange={this.handleChange} value={this.state.value} /> 
+              onChange={handleChange} value={value} /> 
             </form>
           </header>
       </>
     )
   }
-}

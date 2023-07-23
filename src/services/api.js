@@ -8,14 +8,14 @@ export const getImg = async (searchText, page) => {
     const response = await axios.get(BASEURL, {
       params: {
         q: searchText,
-        page: page,
+        // page: 1, 
         key: API_KEY,
         image_type: "photo",
         orientation: "horizontal",
-        per_page: 12,
+        per_page: 12 * page,
       },
     });
-    return response.data.hits;
+    return response.data;
   } catch (error) {
     console.log(error);
     return [];
