@@ -20,8 +20,8 @@ export const App = () => {
   const [modalShow, setModalShow] = useState({})
   const [loadMore, setLoadMore] = useState(false)
   const [gallery, setGallery] = useState([])
-  const prevSearchTextRef = useRef("");
-  
+  const prevSearchTextRef = useRef([]);
+
   useEffect(() => {
     if (!searchText) {
       setGallery([]);
@@ -30,7 +30,6 @@ export const App = () => {
     }
 
     if (prevSearchTextRef.current !== searchText) {
-      setPage(1); 
       setGallery([]); 
     }
     prevSearchTextRef.current = searchText;
@@ -38,7 +37,7 @@ export const App = () => {
     const fetchData = async () => {
       setIsLoading(true)
 
-      const resp = await getImg(searchText, page).then(resp => resp)
+      const resp = await getImg(searchText, page)
 
       setGallery((prevGallery) => [...prevGallery, ...resp.hits]);
       if (resp.totalHits > page * 12) {
@@ -60,6 +59,7 @@ export const App = () => {
   }, [searchText, page])
 
   const hendleInput = async (searchText) => {
+    setPage(1)
     setSearchText(searchText)
   }
 
